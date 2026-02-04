@@ -1,0 +1,18 @@
+# Don't commit your actual Supabase credentials
+# config.js is included for users to add their own
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
