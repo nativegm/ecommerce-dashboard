@@ -1,5 +1,5 @@
 // Supabase client
-let supabase;
+var supabaseClient;
 let currentUser = null;
 let rawData = [];
 let filteredData = [];
@@ -33,7 +33,7 @@ function initializeSupabase() {
         return;
     }
 
-    if (window.supabase && window.supabase.createClient) supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    if (window.supabase && window.supabase.createClient) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     checkAuth();
 }
 
@@ -52,7 +52,7 @@ function showDemoMode() {
 }
 
 async function checkAuth() {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await supabaseClient.auth.getUser();
     
     if (user) {
         currentUser = user;
@@ -95,7 +95,7 @@ async function login() {
         return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
         email: email,
         password: password
     });
@@ -128,7 +128,7 @@ async function signup() {
         return;
     }
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabaseClient.auth.signUp({
         email: email,
         password: password
     });
@@ -142,8 +142,8 @@ async function signup() {
 }
 
 async function logout() {
-    if (supabase) {
-        await supabase.auth.signOut();
+    if (supabaseClient) {
+        await supabaseClient.auth.signOut();
     }
     currentUser = null;
     rawData = [];
@@ -267,10 +267,10 @@ function generateDemoData() {
 }
 
 async function saveDataToSupabase(data) {
-    if (!supabase || !currentUser) return;
+    if (!supabaseClient || !currentUser) return;
 
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('sales_data')
             .insert(data.map(row => ({
                 user_id: currentUser.id,
@@ -291,7 +291,7 @@ async function saveDataToSupabase(data) {
 }
 
 async function loadUserData() {
-    if (!supabase || !currentUser) {
+    if (!supabaseClient || !currentUser) {
         alert('Please log in to load saved data');
         return;
     }
@@ -299,7 +299,7 @@ async function loadUserData() {
     document.getElementById('loading').style.display = 'block';
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('sales_data')
             .select('*')
             .eq('user_id', currentUser.id);
@@ -814,9 +814,9 @@ async function saveCurrentView() {
         dateTo: document.getElementById('dateTo').value
     };
 
-    if (supabase && currentUser) {
+    if (supabaseClient && currentUser) {
         try {
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('saved_views')
                 .insert({
                     user_id: currentUser.id,
@@ -845,9 +845,9 @@ async function saveCurrentView() {
 async function loadUserViews() {
     let views = [];
 
-    if (supabase && currentUser) {
+    if (supabaseClient && currentUser) {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from('saved_views')
                 .select('*')
                 .eq('user_id', currentUser.id);
@@ -904,9 +904,9 @@ function loadView(view) {
 async function deleteView(id) {
     if (!confirm('Delete this view?')) return;
 
-    if (supabase && currentUser) {
+    if (supabaseClient && currentUser) {
         try {
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('saved_views')
                 .delete()
                 .eq('id', id);
