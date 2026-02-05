@@ -38,9 +38,16 @@ function initializeSupabase() {
 }
 
 function showDemoMode() {
-    document.getElementById('authContainer').style.display = 'none';
-    document.getElementById('mainApp').style.display = 'block';
-    document.getElementById('userEmail').textContent = 'Demo Mode';
+    console.log('Activating demo mode...');
+    const authContainer = document.getElementById('authContainer');
+    const mainApp = document.getElementById('mainApp');
+    const userEmail = document.getElementById('userEmail');
+
+    if (authContainer) authContainer.style.display = 'none';
+    if (mainApp) mainApp.style.display = 'block';
+    if (userEmail) userEmail.textContent = 'Demo Mode';
+
+    console.log('Loading sample data...');
     loadSampleData();
 }
 
@@ -206,13 +213,18 @@ function handleFileUpload(event) {
 }
 
 function loadSampleData() {
-    document.getElementById("loading").style.display = "block";
-    
+    console.log('loadSampleData called');
+    const loading = document.getElementById("loading");
+    if (loading) loading.style.display = "block";
+
     // Use embedded data if available (most reliable)
     if (typeof EMBEDDED_DATA !== "undefined" && EMBEDDED_DATA.length > 0) {
+        console.log('Using embedded data:', EMBEDDED_DATA.length, 'records');
         processData(EMBEDDED_DATA);
         return;
     }
+
+    console.warn('EMBEDDED_DATA not available, trying CSV fallback');
     
     // Fallback: try fetching CSV
     Papa.parse("ecommerce_sales_data.csv", {
@@ -319,7 +331,10 @@ async function loadUserData() {
 }
 
 function processData(data) {
+    console.log('Processing data:', data.length, 'records');
     rawData = data.filter(row => row['Order Date'] && row.Sales);
+    console.log('After filtering:', rawData.length, 'records');
+
     rawData.forEach(row => {
         row.Sales = parseFloat(row.Sales);
         row.Profit = parseFloat(row.Profit);
@@ -328,8 +343,9 @@ function processData(data) {
             row.Date = new Date(row['Order Date']);
         }
     });
-    
+
     filteredData = [...rawData];
+    console.log('Initializing dashboard with', filteredData.length, 'records');
     initializeDashboard();
 }
 
