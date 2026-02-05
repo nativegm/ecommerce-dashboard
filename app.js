@@ -33,7 +33,7 @@ function initializeSupabase() {
         return;
     }
 
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    if (window.supabase && window.supabase.createClient) supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     checkAuth();
 }
 

@@ -6,7 +6,7 @@
     <title>E-commerce Analytics Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" async></script>
     <style>
         * {
             margin: 0;
@@ -383,6 +383,7 @@
     </style>
 </head>
 <body>
+<script>window.onerror=function(m,s,l,c,e){console.error("JS Error:",m,s,l);return false;};</script>
     <div id="authContainer" class="auth-container" style="display: none;">
         <h2>🔐 Welcome to E-commerce Analytics</h2>
         <div id="authMessage"></div>
