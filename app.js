@@ -6,13 +6,28 @@ let filteredData = [];
 let charts = {};
 
 // Initialize app
-document.addEventListener('DOMContentLoaded', function() {
+function initApp() {
     initializeSupabase();
     setupDragDrop();
-});
+}
+
+// Try both DOMContentLoaded and immediate execution as fallback
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    // DOM is already loaded
+    initApp();
+}
 
 function initializeSupabase() {
-    if (typeof SUPABASE_URL === 'undefined' || !SUPABASE_URL) {
+    // Check if config is loaded
+    if (typeof SUPABASE_URL === 'undefined') {
+        console.error('Config not loaded. Retrying...');
+        setTimeout(initializeSupabase, 100);
+        return;
+    }
+
+    if (!SUPABASE_URL || SUPABASE_URL === '') {
         console.warn('Supabase not configured. Using demo mode.');
         showDemoMode();
         return;
