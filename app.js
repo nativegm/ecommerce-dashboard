@@ -191,18 +191,23 @@ function handleFileUpload(event) {
 }
 
 function loadSampleData() {
-    document.getElementById('loading').style.display = 'block';
+    document.getElementById("loading").style.display = "block";
     
-    // Use the sample data from the workspace
-    Papa.parse('ecommerce_sales_data.csv', {
+    // Use embedded data if available (most reliable)
+    if (typeof EMBEDDED_DATA !== "undefined" && EMBEDDED_DATA.length > 0) {
+        processData(EMBEDDED_DATA);
+        return;
+    }
+    
+    // Fallback: try fetching CSV
+    Papa.parse("ecommerce_sales_data.csv", {
         download: true,
         header: true,
         complete: function(results) {
             processData(results.data);
         },
         error: function(error) {
-            // If sample file not found, create demo data
-            const demoData = generateDemoData();
+            var demoData = generateDemoData();
             processData(demoData);
         }
     });
